@@ -1,6 +1,6 @@
-import 'package:delix/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../utils/currency_formatter.dart';
 import '../providers/cart.dart';
 import '../providers/order.dart';
 import '../components/cart_item_component.dart';

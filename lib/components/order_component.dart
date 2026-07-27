@@ -25,7 +25,7 @@ class _OrderComponentState extends State<OrderComponent> {
               children: [
                 Expanded(
                   child: Text(
-                    '#ORD-${widget.order.id}',
+                    '#Pedido-${widget.order.id}',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
