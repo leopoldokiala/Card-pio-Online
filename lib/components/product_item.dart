@@ -1,3 +1,4 @@
+import 'package:delix/utils/app_route.dart';
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../utils/currency_formatter.dart';
@@ -34,7 +35,9 @@ class ProductItem extends StatelessWidget {
             ),
             Expanded(
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoute.productForm);
+                },
                 icon: Icon(
                   Icons.delete,
                   color: Theme.of(context).colorScheme.secondary,
