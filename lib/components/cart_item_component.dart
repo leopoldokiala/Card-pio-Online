@@ -45,10 +45,52 @@ class CartItemComponent extends StatelessWidget {
                 const SizedBox(width: 12),
                 TextButton.icon(
                   onPressed: () {
-                    Provider.of<Cart>(
-                      context,
-                      listen: false,
-                    ).removeItem(cartItem.productId);
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Tem a certeza?'),
+                          content: Text(
+                            'Remover Produto do carrinho',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Provider.of<Cart>(
+                                  context,
+                                  listen: false,
+                                ).removeItem(cartItem.productId);
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                'Sim',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                'Cancelar',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                   icon: Icon(
                     Icons.delete,

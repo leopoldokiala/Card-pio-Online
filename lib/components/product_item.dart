@@ -140,7 +140,7 @@ class ProductItem extends StatelessWidget {
                         );
 
                         messenger.showSnackBar(snackBar);
-                        Future.delayed(Duration(seconds: 2), () {
+                        Future.delayed(Duration(seconds: 3), () {
                           messenger.hideCurrentSnackBar();
                         });
                         cart.addItem(product);

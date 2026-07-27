@@ -40,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           PopupMenuButton<FilterOptions>(
             onSelected: (FilterOptions selectedValue) {
-              debugPrint('Valor: $selectedValue');
               if (selectedValue == FilterOptions.favorite) {
                 setState(() {
                   _showFavoriteOnly = true;
