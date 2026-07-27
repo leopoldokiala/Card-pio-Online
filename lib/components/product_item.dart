@@ -118,6 +118,31 @@ class ProductItem extends StatelessWidget {
                       padding:
                           EdgeInsets.zero, // remove padding extra do IconButton
                       onPressed: () {
+                        final messenger = ScaffoldMessenger.of(context);
+                        messenger.removeCurrentSnackBar();
+                        final snackBar = SnackBar(
+                          content: const Text(
+                            'Produto adicionado com sucesso!',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          duration: Duration(seconds: 2),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.secondary,
+                          action: SnackBarAction(
+                            label: 'ANULAR',
+                            textColor: Colors.white,
+                            onPressed: () {
+                              cart.removeSingleItemOnCart(product.id);
+                            },
+                          ),
+                        );
+
+                        messenger.showSnackBar(snackBar);
+                        Future.delayed(Duration(seconds: 2), () {
+                          messenger.hideCurrentSnackBar();
+                        });
                         cart.addItem(product);
                       },
                       icon: Icon(

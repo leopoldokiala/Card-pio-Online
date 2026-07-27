@@ -56,6 +56,27 @@ class Cart extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeSingleItemOnCart(String productId) {
+    if (!_items.containsKey(productId)) {
+      return;
+    }
+    if (_items[productId]?.quantity == 1) {
+      _items.remove(productId);
+    } else {
+      _items.update(productId, (existingItem) {
+        return CartItem(
+          id: existingItem.id,
+          productId: existingItem.productId,
+          title: existingItem.title,
+          quantity: existingItem.quantity - 1,
+          price: existingItem.price,
+          imageUrl: existingItem.imageUrl,
+        );
+      });
+    }
+    notifyListeners();
+  }
+
   void clear() {
     _items = {};
     notifyListeners();
