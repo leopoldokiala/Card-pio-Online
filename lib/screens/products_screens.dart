@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../components/app_drawer.dart';
 import '../providers/product_list.dart';
+import '../components/product_item.dart';
 
 class ProductsScreens extends StatelessWidget {
   const ProductsScreens({super.key});
@@ -11,19 +12,24 @@ class ProductsScreens extends StatelessWidget {
     final ProductList products = Provider.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Gerenciar Produtos')),
+      appBar: AppBar(
+        title: Text('Gerenciar Produtos'),
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.add))],
+      ),
       drawer: AppDrawer(),
       body: Padding(
         padding: EdgeInsets.all(8.0),
         child: ListView.builder(
           itemCount: products.itemsCount,
           itemBuilder: (context, index) {
-            return Text(
-              products.items[index].title,
-              style: TextStyle(fontSize: 30, color: Colors.black),
-            );
+            return ProductItem(products.items[index]);
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }
