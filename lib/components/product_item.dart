@@ -35,9 +35,7 @@ class ProductItem extends StatelessWidget {
             ),
             Expanded(
               child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoute.productForm);
-                },
+                onPressed: () {},
                 icon: Icon(
                   Icons.delete,
                   color: Theme.of(context).colorScheme.secondary,
