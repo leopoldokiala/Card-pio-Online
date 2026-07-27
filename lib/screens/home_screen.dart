@@ -1,4 +1,4 @@
-import 'package:delix/providers/products.dart';
+import 'package:delix/providers/product_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../components/app_Drawer.dart';
@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String _selectedCategory = 'Todos';
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<Products>(context);
+    final products = Provider.of<ProductList>(context);
     final filteredProducts = _selectedCategory == 'Todos'
         ? products.items
         : products.items
@@ -30,13 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: Theme.of(context).appBarTheme.iconTheme,
-        title: Text(
-          'Delix',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.secondary,
-            fontSize: 24,
-          ),
-        ),
+        title: Text('Delix'),
         actions: [
           PopupMenuButton<FilterOptions>(
             onSelected: (FilterOptions selectedValue) {

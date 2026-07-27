@@ -1,4 +1,4 @@
-import 'package:delix/providers/products.dart';
+import 'package:delix/providers/product_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './screens/home_screen.dart';
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => Products()),
+        ChangeNotifierProvider(create: (context) => ProductList()),
         ChangeNotifierProvider(create: (_) => Cart()),
         ChangeNotifierProvider(create: (_) => Orders()),
       ],
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             iconTheme: IconThemeData(color: Color(0xffb21029)),
             backgroundColor: Colors.white,
             centerTitle: true,
-            titleTextStyle: TextStyle(fontWeight: FontWeight.bold),
+            titleTextStyle: TextStyle(color: Color(0xffb21029), fontSize: 24),
           ),
           colorScheme: .fromSeed(
             seedColor: Colors.grey.shade200,
