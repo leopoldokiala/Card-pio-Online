@@ -5,6 +5,7 @@ class ProductFormField extends StatelessWidget {
   final String label;
   final FocusNode? focusNode;
   final int? maxLines;
+  final Function(String?)? onSaved;
   final TextEditingController? controller;
   final TextInputAction? textInputAction;
   final Function(String)? onFieldSubmitted;
@@ -16,6 +17,7 @@ class ProductFormField extends StatelessWidget {
     this.focusNode,
     this.textInputAction,
     this.controller,
+    this.onSaved,
     super.key,
   });
 
@@ -29,6 +31,7 @@ class ProductFormField extends StatelessWidget {
         textInputAction: textInputAction,
         focusNode: focusNode,
         maxLines: maxLines,
+        onSaved: onSaved,
         cursorColor: Theme.of(context).colorScheme.secondary,
         decoration: InputDecoration(
           labelText: label,
