@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../components/product_form_field.dart';
 
+enum Category { alimento, refrigerante }
+
 class ProductFormScreen extends StatefulWidget {
   const ProductFormScreen({super.key});
 
@@ -10,10 +12,25 @@ class ProductFormScreen extends StatefulWidget {
 
 class _ProductFormScreenState extends State<ProductFormScreen> {
   final _priceFocus = FocusNode();
-  final _descFocus = FocusNode();
+  final _descriptionFocus = FocusNode();
+  Category? _selectedCategory;
+
+  @override
+  void dispose() {
+    _priceFocus.dispose();
+    _descriptionFocus.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    // final ProductList productList = Provider.of(context);
+    // final List<Product> categorie = [];
+    //final String categorie = 'Alimento';
+    /* final product = productList.items.map((prod) {
+     return prod.category;
+   },).toList();*/
+
     return Scaffold(
       appBar: AppBar(title: const Text('Cadastrar Produto')),
       body: Padding(
@@ -68,25 +85,51 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             ),
             ProductFormField(
               keyboardType: TextInputType.text,
-
+              textInputAction: TextInputAction.next,
               label: 'Nome',
               maxLines: 1,
-              onFieldSubmitted: (p0) {
+              onFieldSubmitted: (_) {
                 FocusScope.of(context).requestFocus(_priceFocus);
               },
             ),
             ProductFormField(
               keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.next,
               focusNode: _priceFocus,
               label: 'Preço',
               maxLines: 1,
-              onFieldSubmitted: (p0) {
-                FocusScope.of(context).requestFocus(_descFocus);
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_descriptionFocus);
               },
+            ),
+            Row(
+              children: [
+                Text(
+                  'Selecione uma categoria:',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(width: 8.0),
+                DropdownButton<Category>(
+                  value: _selectedCategory,
+                  items: Category.values.map((category) {
+                    return DropdownMenuItem(
+                      value: category,
+                      child: Text(
+                        category.name.toUpperCase(),
+                      ), // ou usar switch para traduzir
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedCategory = newValue!;
+                    });
+                  },
+                ),
+              ],
             ),
             ProductFormField(
               keyboardType: TextInputType.text,
-              focusNode: _descFocus,
+              focusNode: _descriptionFocus,
               label: 'Descrição',
               maxLines: 3,
             ),

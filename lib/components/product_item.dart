@@ -1,4 +1,3 @@
-import 'package:delix/utils/app_route.dart';
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../utils/currency_formatter.dart';
