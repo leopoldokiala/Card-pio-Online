@@ -174,7 +174,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     }).toList(),
                     onChanged: (newValue) {
                       setState(() {
-                        _selectedCategory = newValue!;
+                        _selectedCategory = newValue;
+                        _formData['category'] = newValue?.name;
                       });
                     },
                   ),
