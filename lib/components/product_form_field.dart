@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 
 class ProductFormField extends StatelessWidget {
   final TextInputType keyboardType;
-  final FocusNode? focusNode;
   final String label;
-  final int maxLines;
+  final FocusNode? focusNode;
+  final int? maxLines;
+  final TextEditingController? controller;
   final TextInputAction? textInputAction;
   final Function(String)? onFieldSubmitted;
   const ProductFormField({
     required this.keyboardType,
     required this.label,
-    required this.maxLines,
+    this.maxLines,
     this.onFieldSubmitted,
     this.focusNode,
     this.textInputAction,
+    this.controller,
     super.key,
   });
 
@@ -22,6 +24,7 @@ class ProductFormField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: TextFormField(
+        controller: controller,
         keyboardType: keyboardType,
         textInputAction: textInputAction,
         focusNode: focusNode,

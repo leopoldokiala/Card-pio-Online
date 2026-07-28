@@ -13,24 +13,32 @@ class ProductFormScreen extends StatefulWidget {
 class _ProductFormScreenState extends State<ProductFormScreen> {
   final _priceFocus = FocusNode();
   final _descriptionFocus = FocusNode();
+  final _imageUrlFocus = FocusNode();
+  final _imageController = TextEditingController();
   Category? _selectedCategory;
+
+  void _updateImage() {
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _imageUrlFocus.addListener(_updateImage);
+  }
 
   @override
   void dispose() {
     _priceFocus.dispose();
     _descriptionFocus.dispose();
+    _imageUrlFocus.dispose();
+    _imageController.removeListener(_updateImage);
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final ProductList productList = Provider.of(context);
-    // final List<Product> categorie = [];
-    //final String categorie = 'Alimento';
-    /* final product = productList.items.map((prod) {
-     return prod.category;
-   },).toList();*/
-
     return Scaffold(
       appBar: AppBar(title: const Text('Cadastrar Produto')),
       body: Padding(
@@ -47,17 +55,24 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
-                child: Column(
-                  mainAxisAlignment: .center,
-                  children: [
-                    Icon(
-                      Icons.photo_camera,
-                      size: 70,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                    Text('Adicionar foto do Produto'),
-                  ],
-                ),
+                child: _imageController.text.isEmpty
+                    ? Column(
+                        mainAxisAlignment: .center,
+                        children: [
+                          Icon(
+                            Icons.photo_camera,
+                            size: 70,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          Text('Adicionar foto do Produto'),
+                        ],
+                      )
+                    : FittedBox(
+                        child: Image.network(
+                          _imageController.text,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
               ),
             ),
             Align(
@@ -89,11 +104,22 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
               label: 'Nome',
               maxLines: 1,
               onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_imageUrlFocus);
+              },
+            ),
+            ProductFormField(
+              controller: _imageController,
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.next,
+              maxLines: 1,
+              label: 'URL da imagem',
+              focusNode: _imageUrlFocus,
+              onFieldSubmitted: (_) {
                 FocusScope.of(context).requestFocus(_priceFocus);
               },
             ),
             ProductFormField(
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
               textInputAction: TextInputAction.next,
               focusNode: _priceFocus,
               label: 'Preço',
@@ -132,6 +158,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
               focusNode: _descriptionFocus,
               label: 'Descrição',
               maxLines: 3,
+              textInputAction: TextInputAction.done,
             ),
             SizedBox(height: 8.0),
             ElevatedButton(
