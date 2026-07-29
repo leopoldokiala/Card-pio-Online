@@ -9,9 +9,11 @@ class ProductFormField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputAction? textInputAction;
   final Function(String)? onFieldSubmitted;
+  final String? Function(String?)? validator;
   const ProductFormField({
     required this.keyboardType,
     required this.label,
+    required this.validator,
     this.maxLines,
     this.onFieldSubmitted,
     this.focusNode,
@@ -31,7 +33,6 @@ class ProductFormField extends StatelessWidget {
         textInputAction: textInputAction,
         focusNode: focusNode,
         maxLines: maxLines,
-        onSaved: onSaved,
         cursorColor: Theme.of(context).colorScheme.secondary,
         decoration: InputDecoration(
           labelText: label,
@@ -41,7 +42,6 @@ class ProductFormField extends StatelessWidget {
               color: Theme.of(context).colorScheme.secondary,
             ),
           ),
-
           focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.secondary,
@@ -49,8 +49,12 @@ class ProductFormField extends StatelessWidget {
             ),
           ),
         ),
+        onSaved: onSaved,
         onFieldSubmitted: (value) {
           onFieldSubmitted?.call(value);
+        },
+        validator: (value) {
+          return validator?.call(value);
         },
       ),
     );

@@ -28,7 +28,21 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     setState(() {});
   }
 
+  bool isValidImageUrl(String url) {
+    bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
+    bool endsWithFile =
+        url.toLowerCase().endsWith('.png') ||
+        url.toLowerCase().endsWith('.jpg') ||
+        url.toLowerCase().endsWith('.jpeg');
+    return isValidUrl && endsWithFile;
+  }
+
   void _submitForm() {
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    if (isValid) {
+      return;
+    }
     _formKey.currentState?.save();
     final newProduct = Product(
       id: Random().nextDouble().toString(),
@@ -36,11 +50,12 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       description: _formData['description'] as String,
       price: _formData['price'] as double,
       imageUrl: _formData['imageUrl'].toString(),
-      category: _formData['category'] as String,
+      category: _formData['category'].toString(),
     );
     debugPrint(newProduct.title);
     debugPrint(newProduct.imageUrl);
     debugPrint(newProduct.category);
+    debugPrint(newProduct.description);
   }
 
   @override
@@ -131,6 +146,16 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_imageUrlFocus);
                 },
+                validator: (name) {
+                  final newName = name ?? '';
+                  if (newName.trim().isEmpty) {
+                    return 'Nome é obrigatório';
+                  }
+                  if (newName.trim().length < 3) {
+                    return 'Nome não pode ter menos de 3 letras';
+                  }
+                  return null;
+                },
               ),
               ProductFormField(
                 controller: _imageController,
@@ -139,8 +164,16 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 maxLines: 1,
                 label: 'URL da imagem',
                 focusNode: _imageUrlFocus,
+                onSaved: (imageUrl) => _formData['imageUrl'] = imageUrl ?? '',
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocus);
+                },
+                validator: (image) {
+                  final imageUrl = image ?? '';
+                  if (!isValidImageUrl(imageUrl)) {
+                    return 'Informe uma Url válida';
+                  }
+                  return null;
                 },
               ),
               ProductFormField(
@@ -148,11 +181,18 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 textInputAction: TextInputAction.next,
                 focusNode: _priceFocus,
                 label: 'Preço',
-
                 onSaved: (price) =>
                     _formData['price'] = double.tryParse(price ?? '0.0') ?? 0.0,
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_descriptionFocus);
+                },
+                validator: (price) {
+                  final priceString = price ?? '-1';
+                  final newPrice = double.tryParse(priceString) ?? -1;
+                  if (newPrice <= 0) {
+                    return 'Informe um preço válido';
+                  }
+                  return null;
                 },
               ),
               Row(
@@ -190,6 +230,16 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 onSaved: (description) =>
                     _formData['description'] = description ?? '',
                 onFieldSubmitted: (_) => _submitForm(),
+                validator: (name) {
+                  final newName = name ?? '';
+                  if (newName.trim().isEmpty) {
+                    return 'Descrição é obrigatória';
+                  }
+                  if (newName.trim().length < 10) {
+                    return 'Descrição não deve ter menos de 10 letras';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 8.0),
               ElevatedButton(
