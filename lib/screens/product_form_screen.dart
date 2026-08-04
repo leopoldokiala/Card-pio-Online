@@ -40,7 +40,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   void _submitForm() {
     final isValid = _formKey.currentState?.validate() ?? false;
 
-    if (isValid) {
+    if (!isValid) {
       return;
     }
     _formKey.currentState?.save();
@@ -114,29 +114,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                         ),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: Row(
-                    mainAxisAlignment: .end,
-                    children: [
-                      Icon(
-                        Icons.edit,
-                        color: Theme.of(context).colorScheme.secondary,
-                        size: 18,
-                      ),
-                      Text(
-                        'Alterar Foto',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+
               ProductFormField(
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
@@ -202,25 +180,36 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     style: TextStyle(fontSize: 18),
                   ),
                   SizedBox(width: 8.0),
-                  DropdownButton<Category>(
-                    value: _selectedCategory,
-                    items: Category.values.map((category) {
-                      return DropdownMenuItem(
-                        value: category,
-                        child: Text(
-                          category.name.toUpperCase(),
-                        ), // ou usar switch para traduzir
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        _selectedCategory = newValue;
-                        _formData['category'] = newValue?.name;
-                      });
-                    },
+                  Expanded(
+                    child: DropdownButtonFormField<Category>(
+                      initialValue: _selectedCategory,
+                      decoration: const InputDecoration(labelText: 'Categoria'),
+                      items: Category.values.map((category) {
+                        return DropdownMenuItem(
+                          value: category,
+                          child: Text(
+                            category.name.toUpperCase(),
+                          ), // ou usar switch para traduzir
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedCategory = newValue;
+                          _formData['category'] = newValue?.name;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Selecione uma categoria';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => _formData['category'] = value?.name,
+                    ),
                   ),
                 ],
               ),
+
               ProductFormField(
                 keyboardType: TextInputType.text,
                 focusNode: _descriptionFocus,
@@ -250,6 +239,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 ),
                 onPressed: () {
                   _submitForm();
+                  // _formData['category'] == null
                 },
                 child: Text(
                   'Salvar Produto',
