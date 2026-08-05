@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../components/product_form_field.dart';
 import '../models/product.dart';
+import '../providers/product_list.dart';
 
 enum Category { alimento, refrigerante }
 
@@ -52,10 +54,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       imageUrl: _formData['imageUrl'].toString(),
       category: _formData['category'].toString(),
     );
-    debugPrint(newProduct.title);
-    debugPrint(newProduct.imageUrl);
-    debugPrint(newProduct.category);
-    debugPrint(newProduct.description);
+
+    Provider.of<ProductList>(context, listen: false).addProduct(newProduct);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -183,7 +184,21 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                   Expanded(
                     child: DropdownButtonFormField<Category>(
                       initialValue: _selectedCategory,
-                      decoration: const InputDecoration(labelText: 'Categoria'),
+                      decoration: InputDecoration(
+                        labelText: 'Categoria',
+                        labelStyle: TextStyle(color: Colors.black),
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.secondary,
+                            width: 2,
+                          ),
+                        ),
+                      ),
                       items: Category.values.map((category) {
                         return DropdownMenuItem(
                           value: category,
