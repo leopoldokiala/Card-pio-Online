@@ -41,7 +41,7 @@ class ProductDetailScreen extends StatelessWidget {
                   crossAxisAlignment: .start,
                   children: [
                     Text(
-                      product.title,
+                      product.name,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,

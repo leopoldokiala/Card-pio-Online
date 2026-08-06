@@ -1,12 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../components/product_form_field.dart';
-import '../models/product.dart';
+import '../models/category.dart';
 import '../providers/product_list.dart';
-
-enum Category { alimento, refrigerante }
+import '../models/product.dart';
 
 class ProductFormScreen extends StatefulWidget {
   const ProductFormScreen({super.key});
@@ -46,16 +43,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       return;
     }
     _formKey.currentState?.save();
-    final newProduct = Product(
-      id: Random().nextDouble().toString(),
-      title: _formData['name'] as String,
-      description: _formData['description'] as String,
-      price: _formData['price'] as double,
-      imageUrl: _formData['imageUrl'].toString(),
-      category: _formData['category'].toString(),
-    );
 
-    Provider.of<ProductList>(context, listen: false).addProduct(newProduct);
+    Provider.of<ProductList>(context, listen: false).saveProduct(_formData);
     Navigator.of(context).pop();
   }
 
@@ -63,6 +52,27 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   void initState() {
     super.initState();
     _imageUrlFocus.addListener(_updateImage);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_formData.isEmpty) {
+      final arg = ModalRoute.of(context)?.settings.arguments;
+
+      if (arg != null) {
+        final product = arg as Product;
+        _formData['id'] = product.id;
+        _formData['name'] = product.name;
+        _formData['price'] = product.price;
+        _formData['description'] = product.description;
+        _formData['category'] = product.category;
+        _formData['imageUrl'] = product.imageUrl;
+
+        _selectedCategory = product.category;
+        _imageController.text = product.imageUrl;
+      }
+    }
   }
 
   @override
@@ -117,6 +127,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
               ),
 
               ProductFormField(
+                initialValue: _formData['name'] as String? ?? '',
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 label: 'Nome',
@@ -156,6 +167,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 },
               ),
               ProductFormField(
+                initialValue: _formData['price']?.toString() ?? '',
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 textInputAction: TextInputAction.next,
                 focusNode: _priceFocus,
@@ -207,10 +219,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                           ), // ou usar switch para traduzir
                         );
                       }).toList(),
-                      onChanged: (newValue) {
+                      onSaved: (value) => _formData['category'] = value,
+                      onChanged: (value) {
                         setState(() {
-                          _selectedCategory = newValue;
-                          _formData['category'] = newValue?.name;
+                          _selectedCategory = value;
                         });
                       },
                       validator: (value) {
@@ -219,13 +231,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                         }
                         return null;
                       },
-                      onSaved: (value) => _formData['category'] = value?.name,
                     ),
                   ),
                 ],
               ),
 
               ProductFormField(
+                initialValue: _formData['description'] as String? ?? '',
                 keyboardType: TextInputType.text,
                 focusNode: _descriptionFocus,
                 label: 'Descrição',

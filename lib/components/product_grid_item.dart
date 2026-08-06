@@ -76,7 +76,7 @@ class ProductGridItem extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  product.title,
+                  product.name,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,

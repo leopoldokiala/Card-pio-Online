@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../utils/currency_formatter.dart';
+import '../utils/app_route.dart';
+import '../providers/product_list.dart';
 
 class ProductItem extends StatelessWidget {
   final Product product;
@@ -18,7 +21,7 @@ class ProductItem extends StatelessWidget {
             child: Image.network(product.imageUrl, fit: BoxFit.cover),
           ),
         ),
-        title: Text(product.title, style: TextStyle(color: Colors.black)),
+        title: Text(product.name, style: TextStyle(color: Colors.black)),
         subtitle: Text(
           '${CurrencyFormatter.formatPrice(product.price)} kz',
           style: TextStyle(color: Theme.of(context).colorScheme.secondary),
@@ -28,13 +31,23 @@ class ProductItem extends StatelessWidget {
           children: [
             Expanded(
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(
+                    context,
+                  ).pushNamed(AppRoute.productForm, arguments: product);
+                },
                 icon: Icon(Icons.edit, color: Colors.red.shade600),
               ),
             ),
             Expanded(
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  AlertDialog();
+                  Provider.of<ProductList>(
+                    context,
+                    listen: false,
+                  ).deleteProduct(product);
+                },
                 icon: Icon(
                   Icons.delete,
                   color: Theme.of(context).colorScheme.secondary,

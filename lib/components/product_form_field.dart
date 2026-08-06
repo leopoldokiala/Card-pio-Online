@@ -10,6 +10,7 @@ class ProductFormField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final Function(String)? onFieldSubmitted;
   final String? Function(String?)? validator;
+  final String? initialValue;
   const ProductFormField({
     required this.keyboardType,
     required this.label,
@@ -20,6 +21,7 @@ class ProductFormField extends StatelessWidget {
     this.textInputAction,
     this.controller,
     this.onSaved,
+    this.initialValue,
     super.key,
   });
 
@@ -28,6 +30,7 @@ class ProductFormField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: TextFormField(
+        initialValue: initialValue,
         controller: controller,
         keyboardType: keyboardType,
         textInputAction: textInputAction,
