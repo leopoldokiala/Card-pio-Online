@@ -42,11 +42,42 @@ class ProductItem extends StatelessWidget {
             Expanded(
               child: IconButton(
                 onPressed: () {
-                  AlertDialog();
-                  Provider.of<ProductList>(
-                    context,
-                    listen: false,
-                  ).deleteProduct(product);
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Excluir Produto'),
+                        content: Text(
+                          'Tem certeza?',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'Não',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Provider.of<ProductList>(
+                                context,
+                                listen: false,
+                              ).removeProduct(product);
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'Sim',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 icon: Icon(
                   Icons.delete,
