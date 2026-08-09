@@ -5,6 +5,7 @@ import '../components/app_Drawer.dart';
 import '../components/categories_button.dart';
 import '../components/product_grid.dart';
 import '../providers/cart.dart';
+import '../models/category.dart';
 
 enum FilterOptions { all, favorite }
 
@@ -17,11 +18,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool _showFavoriteOnly = false;
-  String _selectedCategory = 'Todos';
+  Category? _selectedCategory;
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<ProductList>(context);
-    final filteredProducts = _selectedCategory == 'Todos'
+    final filteredProducts = _selectedCategory == null
         ? products.items
         : products.items
               .where((prod) => prod.category == _selectedCategory)
@@ -123,28 +124,28 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 CategoriesButton(
                   'Todos',
-                  isSelected: _selectedCategory == 'Todos',
+                  isSelected: _selectedCategory == null,
                   (category) {
                     setState(() {
-                      _selectedCategory = category;
+                      _selectedCategory = null;
                     });
                   },
                 ),
                 CategoriesButton(
                   'Alimentos',
-                  isSelected: _selectedCategory == 'Alimentos',
+                  isSelected: _selectedCategory == Category.alimento,
                   (category) {
                     setState(() {
-                      _selectedCategory = category;
+                      _selectedCategory = Category.alimento;
                     });
                   },
                 ),
                 CategoriesButton(
                   'Refrigerantes',
-                  isSelected: _selectedCategory == 'Refrigerantes',
+                  isSelected: _selectedCategory == Category.refrigerante,
                   (category) {
                     setState(() {
-                      _selectedCategory = category;
+                      _selectedCategory = Category.refrigerante;
                     });
                   },
                 ),
