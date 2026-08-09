@@ -6,6 +6,7 @@ import '../components/categories_button.dart';
 import '../components/product_grid.dart';
 import '../providers/cart.dart';
 import '../models/category.dart';
+import '../models/Product.dart';
 
 enum FilterOptions { all, favorite }
 
@@ -17,16 +18,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String _searchQuery = '';
   bool _showFavoriteOnly = false;
   Category? _selectedCategory;
+  Product? product;
+
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<ProductList>(context);
-    final filteredProducts = _selectedCategory == null
-        ? products.items
-        : products.items
-              .where((prod) => prod.category == _selectedCategory)
-              .toList();
+    final filteredProducts = products.items.where((prod) {
+      final matchesCategory =
+          _selectedCategory == null || prod.category == _selectedCategory;
+      final query = _searchQuery.trim().toLowerCase();
+      final matchesQuery =
+          query.isEmpty || prod.name.toLowerCase().contains(query);
+      return matchesCategory && matchesQuery;
+    }).toList();
     final Cart cart = Provider.of<Cart>(context);
     return Scaffold(
       appBar: AppBar(
@@ -113,10 +120,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 2,
                   ),
                 ),
-
                 filled: true,
                 fillColor: Colors.grey.shade200,
               ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
             ),
             SizedBox(height: 8),
             Row(
