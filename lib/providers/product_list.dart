@@ -49,6 +49,7 @@ class ProductList with ChangeNotifier {
     } else {
       addProduct(product);
     }
+    notifyListeners();
   }
 
   void removeProduct(Product product) {

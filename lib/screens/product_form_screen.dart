@@ -51,7 +51,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   @override
   void initState() {
     super.initState();
-    _imageUrlFocus.addListener(_updateImage);
+    _imageController.addListener(_updateImage);
   }
 
   @override
@@ -105,22 +105,30 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
-                  child: _imageController.text.isEmpty
+                  child:
+                      (_imageController.text.isEmpty ||
+                          !isValidImageUrl(_imageController.text))
                       ? Column(
-                          mainAxisAlignment: .center,
-                          children: [
-                            Icon(
-                              Icons.photo_camera,
-                              size: 70,
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                            Text('Adicionar foto do Produto'),
-                          ],
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [Text('Adicione uma URL no campo')],
                         )
                       : FittedBox(
                           child: Image.network(
                             _imageController.text,
                             fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(
+                                    Icons.error,
+                                    size: 70,
+                                    color: Colors.red,
+                                  ),
+                                  Text('URL inválida'),
+                                ],
+                              );
+                            },
                           ),
                         ),
                 ),
