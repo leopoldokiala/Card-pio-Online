@@ -122,7 +122,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                 children: const [
                                   Icon(
                                     Icons.error,
-                                    size: 70,
+                                    size: 60,
                                     color: Colors.red,
                                   ),
                                   Text('URL inválida'),
@@ -169,7 +169,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 validator: (image) {
                   final imageUrl = image ?? '';
                   if (!isValidImageUrl(imageUrl)) {
-                    return 'Informe uma Url válida';
+                    return 'Informe uma URL válida';
                   }
                   return null;
                 },
