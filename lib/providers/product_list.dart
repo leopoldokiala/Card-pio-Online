@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../models/category.dart';
 import '../models/product.dart';
 import '../data/dummy_data.dart';
 
 class ProductList with ChangeNotifier {
+  final _baseUrl = 'https://delix-5373f-default-rtdb.firebaseio.com';
   final List<Product> _items = dummyData;
 
   List<Product> get items {
@@ -21,6 +24,17 @@ class ProductList with ChangeNotifier {
   }
 
   void addProduct(Product product) {
+    http.post(
+      Uri.parse('$_baseUrl/products.json'),
+      body: jsonEncode({
+        'name': product.name,
+        'description': product.description,
+        'price': product.price,
+        'imageUrl': product.imageUrl,
+        'category': (product.category).toString(),
+        'isFavorite': product.isFavorite,
+      }),
+    );
     _items.add(product);
     notifyListeners();
   }
