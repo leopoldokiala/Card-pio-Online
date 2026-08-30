@@ -50,14 +50,34 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       _isLoading = true;
     });
 
-    Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).saveProduct(_formData).then((value) {
-      if (!mounted) return;
-      setState(() => _isLoading = false);
-      Navigator.of(context).pop();
-    });
+    Provider.of<ProductList>(context, listen: false)
+        .saveProduct(_formData)
+        .catchError((error) {
+          if (mounted) {
+            return showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Ocorreu um erro'),
+                  content: Text('Ocorreu um erro para salvar o produto.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Ok'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        })
+        .then((value) {
+          if (!mounted) return;
+          setState(() => _isLoading = false);
+          Navigator.of(context).pop();
+        });
   }
 
   @override

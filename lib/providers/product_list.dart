@@ -25,7 +25,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) {
     final future = http.post(
-      Uri.parse('$_baseUrl/products.json'),
+      Uri.parse('$_baseUrl/products'),
       body: jsonEncode({
         'name': product.name,
         'description': product.description,
