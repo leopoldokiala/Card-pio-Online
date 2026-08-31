@@ -24,6 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Product? product;
 
   @override
+  void initState() {
+    super.initState();
+    Provider.of<ProductList>(context, listen: false).loadProducts();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final products = Provider.of<ProductList>(context);
     final filteredProducts = products.items.where((prod) {

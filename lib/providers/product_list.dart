@@ -8,7 +8,7 @@ import '../models/product.dart';
 import '../data/dummy_data.dart';
 
 class ProductList with ChangeNotifier {
-  final _baseUrl = 'https://delix-5373f-default-rtdb.firebaseio.com';
+  final _url = 'https://delix-5373f-default-rtdb.firebaseio.com/products.json';
   final List<Product> _items = dummyData;
 
   List<Product> get items {
@@ -23,9 +23,14 @@ class ProductList with ChangeNotifier {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
+  Future<void> loadProducts() async {
+    final response = await http.get(Uri.parse(_url));
+    print(response.body);
+  }
+
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl/products.json'),
+      Uri.parse(_url),
       body: jsonEncode({
         'name': product.name,
         'description': product.description,
