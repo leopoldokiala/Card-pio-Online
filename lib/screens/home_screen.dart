@@ -22,11 +22,18 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showFavoriteOnly = false;
   Category? _selectedCategory;
   Product? product;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    Provider.of<ProductList>(context, listen: false).loadProducts();
+    Provider.of<ProductList>(context, listen: false).loadProducts().then((
+      value,
+    ) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   @override
@@ -168,7 +175,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            Expanded(child: ProductGrid(_showFavoriteOnly, filteredProducts)),
+            Expanded(
+              child: _isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    )
+                  : ProductGrid(_showFavoriteOnly, filteredProducts),
+            ),
           ],
         ),
       ),

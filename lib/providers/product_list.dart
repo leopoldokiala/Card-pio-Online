@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/category.dart';
 import '../models/product.dart';
-import '../data/dummy_data.dart';
 
 class ProductList with ChangeNotifier {
   final _url = 'https://delix-5373f-default-rtdb.firebaseio.com/products.json';
-  final List<Product> _items = dummyData;
+  final List<Product> _items = [];
 
   List<Product> get items {
     return [..._items];
@@ -24,8 +23,26 @@ class ProductList with ChangeNotifier {
   }
 
   Future<void> loadProducts() async {
+    // _items.clear();
     final response = await http.get(Uri.parse(_url));
-    print(response.body);
+    if (response.body == 'null') return;
+    Map<String, dynamic> data = jsonDecode(response.body);
+    data.forEach((productId, productData) {
+      _items.add(
+        Product(
+          id: productId,
+          name: productData['name'],
+          description: productData['description'],
+          price: productData['price'],
+          imageUrl: productData['imageUrl'],
+          category: Category.values.byName(
+            (productData['category'] as String).replaceFirst('Category.', ''),
+          ),
+          isFavorite: productData['isFavorite'],
+        ),
+      );
+      notifyListeners();
+    });
   }
 
   Future<void> addProduct(Product product) async {
@@ -36,7 +53,7 @@ class ProductList with ChangeNotifier {
         'description': product.description,
         'price': product.price,
         'imageUrl': product.imageUrl,
-        'category': (product.category).toString(),
+        'category': (product.category.name).toString(),
         'isFavorite': product.isFavorite,
       }),
     );
@@ -56,17 +73,6 @@ class ProductList with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateProduct(Product product) {
-    int index = _items.indexWhere((p) => p.id == product.id);
-
-    if (index >= 0) {
-      _items[index] = product;
-      notifyListeners();
-    }
-
-    return Future.value();
-  }
-
   Future<void> saveProduct(Map<String, Object?> data) {
     bool? hasId = data['id'] != null;
     final product = Product(
@@ -82,6 +88,17 @@ class ProductList with ChangeNotifier {
     } else {
       return addProduct(product);
     }
+  }
+
+  Future<void> updateProduct(Product product) {
+    int index = _items.indexWhere((p) => p.id == product.id);
+
+    if (index >= 0) {
+      _items[index] = product;
+      notifyListeners();
+    }
+
+    return Future.value();
   }
 
   void removeProduct(Product product) {
