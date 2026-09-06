@@ -4,6 +4,7 @@ import '../models/product.dart';
 import '../utils/currency_formatter.dart';
 import '../utils/app_route.dart';
 import '../providers/product_list.dart';
+import '../exceptions/http_exception.dart';
 
 class ProductItem extends StatelessWidget {
   final Product product;
@@ -11,6 +12,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final msg = ScaffoldMessenger.of(context);
     return Card(
       child: ListTile(
         leading: ClipRRect(
@@ -42,19 +44,19 @@ class ProductItem extends StatelessWidget {
             Expanded(
               child: IconButton(
                 onPressed: () {
-                  showDialog(
+                  showDialog<bool>(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        title: Text('Excluir Produto'),
-                        content: Text(
+                        title: const Text('Excluir Produto'),
+                        content: const Text(
                           'Tem certeza?',
                           style: TextStyle(fontSize: 18),
                         ),
                         actions: [
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(false);
                             },
                             child: Text(
                               'Não',
@@ -63,11 +65,7 @@ class ProductItem extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              Provider.of<ProductList>(
-                                context,
-                                listen: false,
-                              ).removeProduct(product);
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(true);
                             },
                             child: Text(
                               'Sim',
@@ -77,7 +75,23 @@ class ProductItem extends StatelessWidget {
                         ],
                       );
                     },
-                  );
+                  ).then((value) async {
+                    if (value ?? false) {
+                      try {
+                        await Provider.of<ProductList>(
+                          context,
+                          listen: false,
+                        ).removeProduct(product);
+                      } on HttpException catch (error) {
+                        msg.showSnackBar(
+                          SnackBar(
+                            backgroundColor: Color(0xffb21029),
+                            content: Text(error.toString()),
+                          ),
+                        );
+                      }
+                    }
+                  });
                 },
                 icon: Icon(
                   Icons.delete,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/category.dart';
 import '../models/product.dart';
+import '../exceptions/http_exception.dart';
 
 class ProductList with ChangeNotifier {
   final _baseUrl = 'https://delix-5373f-default-rtdb.firebaseio.com/products';
@@ -117,14 +118,15 @@ class ProductList with ChangeNotifier {
       _items.remove(product);
       notifyListeners();
 
-      final response = await http.delete(
-        Uri.parse('$_baseUrl/${product.id}.json'),
-      );
+      final response = await http.delete(Uri.parse('$_baseUrl/${product.id}'));
 
       if (response.statusCode >= 400) {
-        print('Erros do lado do cliente');
         _items.insert(index, product);
         notifyListeners();
+        throw HttpException(
+          msg: 'Não foi possível excluir o Produto',
+          statusCode: response.statusCode,
+        );
       }
     }
   }
