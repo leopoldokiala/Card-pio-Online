@@ -183,6 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     )
                   : RefreshIndicator(
+                      color: Theme.of(context).colorScheme.secondary,
                       onRefresh: () =>
                           Provider.of<ProductList>(
                             context,
