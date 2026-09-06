@@ -182,11 +182,31 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                     )
-                  : ProductGrid(_showFavoriteOnly, filteredProducts),
+                  : RefreshIndicator(
+                      onRefresh: () =>
+                          Provider.of<ProductList>(
+                            context,
+                            listen: false,
+                          ).loadProducts().then((value) {
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }),
+                      child: ProductGrid(_showFavoriteOnly, filteredProducts),
+                    ),
             ),
           ],
         ),
       ),
     );
   }
+
+  /*
+  Future<void> _loadProducts() async {
+    await Provider.of<ProductList>(context).loadProducts().then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }*/
 }

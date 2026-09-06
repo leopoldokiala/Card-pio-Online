@@ -4,7 +4,6 @@ import '../components/app_drawer.dart';
 import '../providers/product_list.dart';
 import '../components/product_item.dart';
 import '../utils/app_route.dart';
-import '../providers/product_list.dart';
 
 class ProductsScreens extends StatefulWidget {
   const ProductsScreens({super.key});
